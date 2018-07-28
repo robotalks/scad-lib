@@ -1,3 +1,6 @@
 /out
 *.stl
 *.gcode
+/exp
+_exp.scad
+
