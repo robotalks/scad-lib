@@ -146,7 +146,7 @@ module ttMotorShell(thick = ttMotorT, sp = ttMotorSp) {
             cube([ttMotorTailL+0.2, (ttMotorTailT+sp)*2, ttMotorTailH+lsp]);
             translate([ttMotorTailHoleOff, ttMotorTailT-ttMotorGearBoxThinD-thick-0.1, ttMotorTailH/2+sp])
             rotate([-90, 0, 0])
-            cylinder(h = ttMotorGearBoxD+thick*2+lsp+0.2, r = ttMotorTailHoleR);
+            cylinder(h = ttMotorGearBoxD+thick*2+lsp+0.2, r = ttMotorTailHoleR+sp);
             translate([0, -ttMotorGearBoxThinD-thick+ttMotorTailT-0.1-lsp, 0])
             cube([ttMotorTailL, ttMotorGearBoxThinD+thick-ttMotorTailT*2+0.1, ttMotorTailH+lsp]);
             translate([0, ttMotorTailT*3+lsp*2, 0])
