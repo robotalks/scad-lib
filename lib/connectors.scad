@@ -1,9 +1,9 @@
 M3NutHoleD = 6.4;
-M3BoltHoleD = 3;
+M3BoltHoleD = 3.2;
 M3CapHoleD = 6.4;
 
 M25NutHoleD = 5.6;
-M25BoltHoleD = 2.6;
+M25BoltHoleD = 2.7;
 M25CapHoleD = 5.6;
 
 M2NutHoleD = 4.8;

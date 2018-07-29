@@ -20,11 +20,13 @@ ttMotorTailHoleOff = ttMotorTailL/2;    // from end of the tail, not GearBox sid
 ttMotorNeckL = 11.3;
 ttMotorNeckOutH = ttMotorGearBoxH;
 ttMotorNeckD = ttMotorGearBoxThinD*2;
+ttMotorNeckCoverH = 5;
 ttMotorNeckInH = 15;
 ttMotorBuckleOff = 4.8;     // Distance between buckle start and edge of Neck and GearBox
 ttMotorBuckleH = 5.2;
 ttMotorBuckleL = 2.5;
 ttMotorBuckleD = 3;
+ttMotorMotorL = 17;
 
 ttMotorShellConnFrontL = 8;
 ttMotorShellConnTailL = 4;
@@ -88,9 +90,9 @@ module _ttMotorBuckle() {
 module _ttMotorNeck(sp = 0) {
     intersection() {
         translate([0, -ttMotorNeckD/2-sp, -ttMotorNeckOutH/2-sp])
-        cube([ttMotorNeckL, ttMotorNeckD+sp*2, ttMotorNeckOutH+sp*2]);
+        cube([ttMotorNeckL+ttMotorMotorL, ttMotorNeckD+sp*2, ttMotorNeckOutH+sp*2]);
         rotate([0, 90, 0])
-        cylinder(h = ttMotorNeckL, d = ttMotorNeckOutH+sp*2);
+        cylinder(h = ttMotorNeckL+ttMotorMotorL, d = ttMotorNeckOutH+sp*2);
     }
 }
 
@@ -115,7 +117,7 @@ module _ttMotorShellHollowSub(thick, sp) {
     cube([ttMotorShellConnFrontOff-thick+ttMotorAxesHoleOutR, ttMotorGearBoxD/4+thick+sp+0.1, ttMotorGearBoxH*2]);
 }
 
-module ttMotorShell(thick = ttMotorT, sp = ttMotorSp) {
+module ttMotorShell(thick = ttMotorT, sp = ttMotorSp, tailScrew = true, hollow = true, withMotor = true) {
     lsp = sp*2;
     difference() {
         translate([-ttMotorAxesOff-thick-sp, -ttMotorGearBoxThinD-thick-sp, -ttMotorGearBoxH/2-thick-sp])
@@ -126,8 +128,20 @@ module ttMotorShell(thick = ttMotorT, sp = ttMotorSp) {
                 translate([-ttMotorTailL+thick+sp, ttMotorGearBoxThinD-ttMotorTailT, (ttMotorGearBoxH-ttMotorTailH)/2])
                 cube([ttMotorTailL, (ttMotorTailT+thick+sp)*2, ttMotorTailH+thick*2+lsp]);
                 // neck cover
-                translate([ttMotorGearBoxL+thick+lsp, 0, 0])
-                cube([thick, ttMotorGearBoxD+thick*2+lsp, ttMotorGearBoxH+thick*2+lsp]);
+                translate([ttMotorGearBoxL+thick+lsp, 0, 0]) {
+                    cube([thick, ttMotorGearBoxD+thick*2+lsp, ttMotorGearBoxH+thick*2+lsp]);
+                    if (withMotor) {
+                        translate([0, 0, ttMotorGearBoxH+thick+sp-ttMotorNeckCoverH])
+                        cube([ttMotorNeckL+ttMotorMotorL, ttMotorGearBoxD+thick*2+lsp, ttMotorNeckCoverH+thick+sp]);
+                    }
+                    // end of motor
+                    translate([ttMotorNeckL+ttMotorMotorL, 0, 0])
+                    difference() {
+                        cube([thick, ttMotorGearBoxD+thick*2+lsp, ttMotorGearBoxH+thick*2+lsp]);
+                        translate([-0.1, ttMotorGearBoxThinD+sp, ttMotorGearBoxH/2+sp])
+                        cube([thick+0.2, thick*2, thick*2]);
+                    }
+                }
             }
             translate([thick, thick, thick])
             cube([ttMotorGearBoxL+lsp, ttMotorGearBoxD+lsp, ttMotorGearBoxH+lsp]);
@@ -140,17 +154,19 @@ module ttMotorShell(thick = ttMotorT, sp = ttMotorSp) {
         rotate([-90, 0, 0])
         cylinder(h = ttMotorGearBoxThickD+thick+lsp, r = ttMotorRndHullR+sp);
         // substract tail and space
-        translate([-ttMotorAxesOff-ttMotorTailL, -ttMotorTailT-sp, -ttMotorTailH/2-sp])
-        union() {
-            translate([-0.1, 0, 0])
-            cube([ttMotorTailL+0.2, (ttMotorTailT+sp)*2, ttMotorTailH+lsp]);
-            translate([ttMotorTailHoleOff, ttMotorTailT-ttMotorGearBoxThinD-thick-0.1, ttMotorTailH/2+sp])
-            rotate([-90, 0, 0])
-            cylinder(h = ttMotorGearBoxD+thick*2+lsp+0.2, r = ttMotorTailHoleR+sp);
-            translate([0, -ttMotorGearBoxThinD-thick+ttMotorTailT-0.1-lsp, 0])
-            cube([ttMotorTailL, ttMotorGearBoxThinD+thick-ttMotorTailT*2+0.1, ttMotorTailH+lsp]);
-            translate([0, ttMotorTailT*3+lsp*2, 0])
-            cube([ttMotorTailL, ttMotorGearBoxThickD+thick-ttMotorTailT*2+0.1, ttMotorTailH+lsp]);
+        if (tailScrew) {
+            translate([-ttMotorAxesOff-ttMotorTailL, -ttMotorTailT-sp, -ttMotorTailH/2-sp])
+            union() {
+                translate([-0.1, 0, 0])
+                cube([ttMotorTailL+0.2, (ttMotorTailT+sp)*2, ttMotorTailH+lsp]);
+                translate([ttMotorTailHoleOff, ttMotorTailT-ttMotorGearBoxThinD-thick-0.1, ttMotorTailH/2+sp])
+                rotate([-90, 0, 0])
+                cylinder(h = ttMotorGearBoxD+thick*2+lsp+0.2, r = ttMotorTailHoleR+sp);
+                translate([0, -ttMotorGearBoxThinD-thick+ttMotorTailT-0.1-lsp, 0])
+                cube([ttMotorTailL, ttMotorGearBoxThinD+thick-ttMotorTailT*2+0.1, ttMotorTailH+lsp]);
+                translate([0, ttMotorTailT*3+lsp*2, 0])
+                cube([ttMotorTailL, ttMotorGearBoxThickD+thick-ttMotorTailT*2+0.1, ttMotorTailH+lsp]);
+            }
         }
         // axes outer hole
         translate([0, -ttMotorGearBoxThinD-thick-sp-0.1, 0])
@@ -158,19 +174,21 @@ module ttMotorShell(thick = ttMotorT, sp = ttMotorSp) {
         cylinder(h = ttMotorGearBoxD+thick*2+lsp+0.2, r = ttMotorAxesHoleOutR+sp);
         
         // remove unnecessary material
-        translate([0, -ttMotorGearBoxThinD-thick-sp-0.1, 0])
-        _ttMotorShellHollowSub(thick, sp);
-        translate([0, ttMotorGearBoxThickD+thick+sp+0.1, 0])
-        mirror([0, 1, 0]) _ttMotorShellHollowSub(thick, sp);
-        
-        subL = ttMotorAxesOff+ttMotorTailL+thick+sp;
-        subD = ttMotorGearBoxThickD;
-        translate([-subL-0.1-ttMotorAxesHoleOutR*2, -subD/2, 0])
-        difference() {
-            translate([0, 0, -ttMotorGearBoxH])
-            cube([subL+0.1, subD, ttMotorGearBoxH*2]);
-            translate([-ttMotorAxesOff+ttMotorAxesHoleOutR*2, -0.1, -ttMotorTailH*1.5])
-            cube([subL+0.1, subD+0.2, ttMotorTailH*3]);
+        if (hollow) {
+            translate([0, -ttMotorGearBoxThinD-thick-sp-0.1, 0])
+            _ttMotorShellHollowSub(thick, sp);
+            translate([0, ttMotorGearBoxThickD+thick+sp+0.1, 0])
+            mirror([0, 1, 0]) _ttMotorShellHollowSub(thick, sp);
+            
+            subL = ttMotorAxesOff+ttMotorTailL+thick+sp;
+            subD = ttMotorGearBoxThickD;
+            translate([-subL-0.1-ttMotorAxesHoleOutR*2, -subD/2, 0])
+            difference() {
+                translate([0, 0, -ttMotorGearBoxH])
+                cube([subL+0.1, subD, ttMotorGearBoxH*2]);
+                translate([-ttMotorAxesOff+ttMotorAxesHoleOutR*2, -0.1, -ttMotorTailH*1.5])
+                cube([subL+0.1, subD+0.2, ttMotorTailH*3]);
+            }
         }
     }
 }
@@ -257,11 +275,16 @@ module ttMotorShellBottom(thick = ttMotorT, sp = ttMotorSp) {
 
 function ttMotorShL() = ttMotorGearBoxL+(ttMotorT+ttMotorSp)*2;
 function ttMotorShTailL() = ttMotorTailL-ttMotorT-ttMotorSp;
+function ttMotorShTailD() = ttMotorTailT*4+ttMotorSp*2;
 function ttMotorShNeckL() = ttMotorNeckL-ttMotorT-ttMotorSp;
+function ttMotorShMotorL() = ttMotorMotorL;
 function ttMotorShH() = ttMotorGearBoxH+(ttMotorT+ttMotorSp)*2;
 function ttMotorShXOffL() = ttMotorGearBoxL-ttMotorAxesOff+ttMotorT+ttMotorSp;
 function ttMotorShXOffS() = ttMotorAxesOff+ttMotorT+ttMotorSp;
 function ttMotorShThinD() = ttMotorGearBoxThinD+ttMotorT+ttMotorSp;
 function ttMotorShThickD() = ttMotorGearBoxThickD+ttMotorT+ttMotorSp;
+function ttMotorShAxesHoleR() = ttMotorAxesHoleOutR;
+function ttMotorShRndHullR() = ttMotorRndHullR;
+function ttMotorShRndHullOff() = ttMotorRndHullOff;
 function ttMotorThick() = ttMotorT;
 function ttMotorSpacing() = ttMotorSp;

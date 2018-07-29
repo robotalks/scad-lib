@@ -11,7 +11,7 @@ exoBatFrameCZ = OutSz(exoBatteryCZ)+THICK*2;
 exoBatMountCX = 25;
 exoBatMountMarginX = THICK+15;
 exoBatMountMarginTop = 8;
-exoBatMountMarginBottom = 5;
+//exoBatMountMarginBottom = 5;
 
 module exoBatteryFrame() {
     difference() {
@@ -29,9 +29,9 @@ module exoBatMount() {
         translate([-exoBatFrameCX/2+exoBatMountMarginX/2-0.1,
             0, exoBatFrameCZ/2-exoBatMountMarginTop/2+0.1])
         cube([exoBatMountMarginX+0.1, exoBatFrameCY+0.2, exoBatMountMarginTop+0.1], true);
-        translate([-exoBatFrameCX/2+exoBatMountMarginX/2-0.1,
-            0, -exoBatFrameCZ/2+exoBatMountMarginBottom/2-0.1])
-        cube([exoBatMountMarginX+0.1, exoBatFrameCY+0.2, exoBatMountMarginBottom+0.1], true);
+        //translate([-exoBatFrameCX/2+exoBatMountMarginX/2-0.1,
+        //    0, -exoBatFrameCZ/2+exoBatMountMarginBottom/2-0.1])
+        //cube([exoBatMountMarginX+0.1, exoBatFrameCY+0.2, exoBatMountMarginBottom+0.1], true);
     }
 }
 
@@ -41,7 +41,7 @@ module exoBatMountF() {
         translate([0, 0, exoBatFrameCZ-THICK])
         mirror([0, 0, 1]) exoNutArray([-5:-4], [-2:2]);
         translate([0, 0, THICK])
-        exoNutArray([-5:-4], [-2:2]);
+        exoNutArray([-6:-4], [-2:2]);
         translate([-exoBatFrameCX/2+THICK, 0, 0]) rotate([0, 90, 0]) exoNutArray([-2:-1], [-2:2]);
         translate([0, -exoBatFrameCY/2+THICK, 0]) rotate([-90, 0, 0]) exoNutArray([-6:-4], [-2:-1]);
         translate([0, exoBatFrameCY/2-THICK, 0]) rotate([90, 0, 0]) exoNutArray([-6:-4], [1:2]);
@@ -54,7 +54,7 @@ module exoBatMountT() {
         translate([0, 0, exoBatFrameCZ-THICK])
         mirror([0, 0, 1]) exoNutArray([4:5], [-2:2]);
         translate([0, 0, THICK])      
-        exoNutArray([4:5], [-2:2]);
+        exoNutArray([4:6], [-2:2]);
         translate([exoBatFrameCX/2-THICK, 0, 0]) rotate([0, -90, 0]) exoNutArray([1:2], [-2:2]);
         translate([0, -exoBatFrameCY/2+THICK, 0]) rotate([-90, 0, 0]) exoNutArray([4:6], [-2:-1]);
         translate([0, exoBatFrameCY/2-THICK, 0]) rotate([90, 0, 0]) exoNutArray([4:6], [1:2]);
