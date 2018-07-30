@@ -62,10 +62,12 @@ module exoMotorMountR() {
             }
         }
         translate([-exoBaseHoleSp*2, -exoBaseHoleSp*5, h/2]) {
-            translate([-ttMotorShAxesHoleR()-SP, -ttMotorShThinD()-0.1, -ttMotorShH()/2])
-            cube([ttMotorShAxesHoleR()*2+SP*2, ttMotorShThinD()+ttMotorShThickD()+0.2, ttMotorShH()/2]);
+            translate([-ttMotorShAxesHoleR()-SP, -ttMotorShThinD()-ttMotorShShaftL()-0.1, -ttMotorShH()/2])
+            cube([ttMotorShAxesHoleR()*2+SP*2, ttMotorShThinD()+ttMotorShThickD()+ttMotorShShaftL()*2+0.2, ttMotorShH()/2]);
             translate([-ttMotorShXOffS()+ttMotorShRndHullOff()-SP, ttMotorShThickD()-THICK-0.1, -ttMotorShH()/2])
             cube([ttMotorShRndHullR()*2+SP*2, THICK*2+0.1, ttMotorShH()/2]);
+            translate([-ttMotorShXOffS()-ttMotorShTailL()-SP, -ttMotorShTailD()/2, -ttMotorShH()/2])
+            cube([ttMotorShTailL()+ttMotorThick()+SP*2, ttMotorShTailD(), ttMotorShH()/2]);
         }
         translate([0, 0, THICK]) {
             exoNutArray([-4:-4], [-5:-5], boltL = THICK*2);
